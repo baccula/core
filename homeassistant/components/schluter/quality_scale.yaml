@@ -10,7 +10,8 @@ rules:
   dependency-transparency: done
   docs-actions:
     status: exempt
-    comment: Uses the standard climate actions, documented with the permanent-mode
+    comment:
+      Uses the standard climate actions, documented with the permanent-mode
       limitation.
   docs-conditions:
     status: exempt
