@@ -2,11 +2,13 @@
   "domain": "schluter",
   "name": "Schluter",
   "categories": ["climate.thermostats_heating"],
-  "codeowners": ["@prairieapps"],
+  "codeowners": ["@baccula", "@prairieapps"],
+  "config_flow": true,
   "connectivity": ["cloud"],
   "documentation": "https://www.home-assistant.io/integrations/schluter",
+  "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "loggers": ["schluter"],
-  "quality_scale": "legacy",
-  "requirements": ["py-schluter==0.1.7"]
+  "loggers": ["schluter_wifi"],
+  "quality_scale": "silver",
+  "requirements": ["schluter-wifi==0.1.0"]
 }

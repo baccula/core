@@ -730,6 +730,7 @@ FLOWS = {
         "satel_integra",
         "saunum",
         "schlage",
+        "schluter",
         "scorpiontrack",
         "scrape",
         "screenlogic",

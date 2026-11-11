@@ -1,7 +1,43 @@
 {
+  "config": {
+    "abort": {
+      "already_configured": "This Schluter account is already configured."
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Schluter. Check your connection and try again.",
+      "invalid_auth": "Schluter rejected the email or password."
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "Your current Schluter account password."
+        },
+        "description": "Schluter rejected the credentials for {username}. Enter the current password.",
+        "title": "Reconnect your Schluter account"
+      },
+      "user": {
+        "data": {
+          "password": "Password",
+          "username": "Email"
+        },
+        "data_description": {
+          "password": "Your current Schluter account password.",
+          "username": "The email registered with your Schluter DITRA-HEAT account."
+        },
+        "description": "Enter the credentials for your Schluter DITRA-HEAT E Wi-Fi account. All thermostats registered to this account will be added.",
+        "title": "Connect your Schluter account"
+      }
+    }
+  },
   "exceptions": {
+    "invalid_auth": {
+      "message": "Schluter rejected the account credentials. Reauthenticate the integration."
+    },
     "set_temperature_failed": {
-      "message": "Failed to set the thermostat temperature."
+      "message": "The temperature change could not be confirmed. Check the thermostat before trying again."
     }
   }
 }

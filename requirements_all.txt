@@ -2070,9 +2070,6 @@ py-nymta==0.4.1
 # homeassistant.components.opendisplay
 py-opendisplay==7.18.1
 
-# homeassistant.components.schluter
-py-schluter==0.1.7
-
 # homeassistant.components.ecovacs
 py-sucks==0.9.11
 
@@ -3116,6 +3113,9 @@ sanix==1.0.6
 
 # homeassistant.components.satel_integra
 satel-integra==1.6.0
+
+# homeassistant.components.schluter
+schluter-wifi==0.1.0
 
 # homeassistant.components.screenlogic
 screenlogicpy==0.10.2
