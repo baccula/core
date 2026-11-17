@@ -40,23 +40,49 @@ async def test_user_error(
     """Keep the form open after a recoverable validation error."""
     mock_client.async_get_thermostats.side_effect = error
     result = await hass.config_entries.flow.async_init(
-        "schluter", context={"source": SOURCE_USER}, data=ACCOUNT
+        "schluter", context={"source": SOURCE_USER}
     )
     assert result["type"] is FlowResultType.FORM
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], ACCOUNT)
     assert result["errors"] == {"base": key}
+    mock_client.async_get_thermostats.side_effect = None
+    with patch("homeassistant.components.schluter.async_setup_entry"):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], ACCOUNT
+        )
+        await hass.async_block_till_done()
+    assert result["type"] is FlowResultType.CREATE_ENTRY
 
 
 @pytest.mark.usefixtures("mock_client")
-@pytest.mark.parametrize("source", [SOURCE_USER, SOURCE_IMPORT])
-async def test_duplicate(
-    hass: HomeAssistant, config_entry: MockConfigEntry, source: str
+async def test_duplicate_import(
+    hass: HomeAssistant, config_entry: MockConfigEntry
 ) -> None:
     """Repeated YAML imports must not overwrite the GUI-managed password."""
     config_entry.add_to_hass(hass)
     result = await hass.config_entries.flow.async_init(
         "schluter",
-        context={"source": source},
+        context={"source": SOURCE_IMPORT},
         data={"username": " Test@EXAMPLE.com ", "password": "old-password"},
+    )
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+    assert config_entry.data == ACCOUNT
+
+
+@pytest.mark.usefixtures("mock_client")
+async def test_duplicate_user(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    """The GUI rejects an account that is already configured."""
+    config_entry.add_to_hass(hass)
+    result = await hass.config_entries.flow.async_init(
+        "schluter", context={"source": SOURCE_USER}
+    )
+    assert result["type"] is FlowResultType.FORM
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {"username": " Test@EXAMPLE.com ", "password": "old-password"},
     )
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "already_configured"
@@ -116,3 +142,12 @@ async def test_reauth_error(
     )
     assert result["errors"] == {"base": key}
     assert config_entry.data == ACCOUNT
+    mock_client.async_get_thermostats.side_effect = None
+    with patch.object(hass.config_entries, "async_reload", return_value=True):
+        result = await hass.config_entries.flow.async_configure(
+            flow["flow_id"], {"password": "new-password"}
+        )
+        await hass.async_block_till_done()
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "reauth_successful"
+    assert config_entry.data == {**ACCOUNT, "password": "new-password"}

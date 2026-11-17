@@ -1,5 +1,6 @@
 """GUI configuration and YAML migration for Schluter."""
 
+from collections.abc import Mapping
 from typing import Any, override
 
 import probatio
@@ -73,7 +74,9 @@ class SchluterConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(title=user_input[CONF_USERNAME], data=user_input)
 
     @override
-    async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
         """Reauthenticate the existing account."""
         return await self.async_step_reauth_confirm()
 
